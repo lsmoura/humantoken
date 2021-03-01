@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type TokenGenerator interface {
+	Generate(size int) string
+}
+
 func Generate(size int, r *rand.Rand) string {
 	const validChars = "23456789abcdefghjkmnpqrstvwxyz"
 
