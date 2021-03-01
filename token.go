@@ -1,7 +1,6 @@
 package humantoken
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -12,14 +11,13 @@ type TokenGenerator interface {
 
 func GenerateWithIndices(indices []int) string {
 	const validChars = "23456789abcdefghjkmnpqrstvwxyz"
-	s := ""
+	s := make([]byte, len(indices))
 
-	for i := 0; i < len(indices); i++ {
-		idx := indices[i] % len(validChars)
-		s = fmt.Sprintf("%s%c", s, validChars[idx])
+	for i, v := range indices {
+		s[i] = validChars[v%len(validChars)]
 	}
 
-	return s
+	return string(s)
 }
 
 func Generate(size int, r *rand.Rand) string {

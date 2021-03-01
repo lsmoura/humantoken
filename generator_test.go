@@ -33,6 +33,15 @@ func Test_NewGeneratorWithRand(t *testing.T) {
 	}
 }
 
+func Test_NewGeneratorWithoutRand(t *testing.T) {
+	g := NewGenerator(nil)
+	got := g.Generate(12)
+	if len(got) != 12 {
+		t.Errorf("for Generate(12) want string with size 12, but got '%s'", got)
+		t.Fail()
+	}
+}
+
 func Test_NewGeneratorWithRandSameAsGenerateWithRand(t *testing.T) {
 	g := NewGenerator(rand.New(rand.NewSource(0)))
 	want := Generate(10, rand.New(rand.NewSource(0)))
