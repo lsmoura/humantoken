@@ -40,3 +40,27 @@ func Test_ReusingRandDiffResults(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func Test_GenerateWithSameIndices(t *testing.T) {
+	idx0 := []int{1, 1, 1}
+	idx1 := []int{1, 1, 1}
+
+	want := GenerateWithIndices(idx0)
+	got := GenerateWithIndices(idx1)
+	if want != got {
+		t.Errorf("for GenerateWithIndices with same array to have same result, but got '%s' and '%s'", want, got)
+		t.Fail()
+	}
+}
+
+func Test_GenerateWithDifferentIndices(t *testing.T) {
+	idx0 := []int{1, 1, 1}
+	idx1 := []int{2, 2, 2}
+
+	want := GenerateWithIndices(idx0)
+	got := GenerateWithIndices(idx1)
+	if want == got {
+		t.Errorf("for GenerateWithIndices with same array to have different results, but got '%s' and '%s'", want, got)
+		t.Fail()
+	}
+}

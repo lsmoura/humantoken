@@ -14,6 +14,10 @@ func (g TokenGen) Generate(size int) string {
 }
 
 func NewGenerator(r *rand.Rand) TokenGenerator {
+	if r == nil {
+		r = rand.New(rand.NewSource(time.Now().UnixNano()))
+	}
+
 	return TokenGen{r}
 }
 
