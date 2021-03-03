@@ -31,9 +31,4 @@ This package was written by [Sergio Moura](https://sergio.moura.ca)
 
 ## License
 
-Public Domain; no rights reserved.
-
-No restrictions are placed on the use of HumanToken. That freedom also means, of course, that no
-warranty of fitness is claimed; use HumanToken at your own risk.
-
-This public domain dedication follows the the CC0 1.0 at https://creativecommons.org/publicdomain/zero/1.0/
+[Unlicense](https://opensource.org/licenses/Unlicense)
