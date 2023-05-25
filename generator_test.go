@@ -1,53 +1,73 @@
 package humantoken
 
 import (
+	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
 )
 
-func Test_ZeroSizeTokenWithRandomGenerator(t *testing.T) {
-	g := NewGeneratorRandom()
-	got := g.Generate(0)
-	want := ""
-	if got != want {
-		t.Errorf("for Generate(0) want empty string, but got '%s'", got)
-		t.Fail()
+func TestGenerator(t *testing.T) {
+	tests := []struct {
+		name           string
+		generator      TokenGenerator // if nil, NewGeneratorRandom() is used
+		size           int
+		expectedLength int
+	}{
+		{
+			name:           "zero size",
+			size:           0,
+			expectedLength: 0,
+		},
+		{
+			name:           "ten size",
+			size:           10,
+			expectedLength: 10,
+		},
+		{
+			name:           "negative size",
+			size:           -10,
+			expectedLength: 0,
+		},
+		{
+			name:           "zero seed generator",
+			generator:      NewGenerator(rand.New(rand.NewSource(0))),
+			size:           10,
+			expectedLength: 10,
+		},
+		{
+			name:           "nil generator",
+			generator:      NewGenerator(nil),
+			size:           12,
+			expectedLength: 12,
+		},
+	}
+
+	for _, tt := range tests {
+		test := tt
+		t.Run(test.name, func(t *testing.T) {
+			g := test.generator
+			if g == nil {
+				g = NewGeneratorRandom()
+			}
+			got := g.Generate(test.size)
+
+			assert.Len(t, got, test.expectedLength)
+		})
 	}
 }
 
-func Test_SpecificSizeTokenWithRandomGenerator(t *testing.T) {
-	g := NewGeneratorRandom()
-	got := g.Generate(10)
-	if len(got) != 10 {
-		t.Errorf("for Generate(10) want string with size 10, but got '%s'", got)
-		t.Fail()
-	}
-}
+func TestNewGeneratorWithRandSameAsGenerateWithRand(t *testing.T) {
+	sources := make([]int64, 10)
 
-func Test_NewGeneratorWithRand(t *testing.T) {
-	g := NewGenerator(rand.New(rand.NewSource(0)))
-	got := g.Generate(10)
-	if len(got) != 10 {
-		t.Errorf("for Generate(10) want string with size 10, but got '%s'", got)
-		t.Fail()
+	for i := range sources {
+		sources[i] = rand.Int63()
 	}
-}
 
-func Test_NewGeneratorWithoutRand(t *testing.T) {
-	g := NewGenerator(nil)
-	got := g.Generate(12)
-	if len(got) != 12 {
-		t.Errorf("for Generate(12) want string with size 12, but got '%s'", got)
-		t.Fail()
-	}
-}
+	for _, sourceSeed := range sources {
+		g := NewGenerator(rand.New(rand.NewSource(0)))
+		want := Generate(10, rand.New(rand.NewSource(0)))
+		got := g.Generate(10)
 
-func Test_NewGeneratorWithRandSameAsGenerateWithRand(t *testing.T) {
-	g := NewGenerator(rand.New(rand.NewSource(0)))
-	want := Generate(10, rand.New(rand.NewSource(0)))
-	got := g.Generate(10)
-	if got != want {
-		t.Errorf("for Generate with same rand to have same result, but got '%s' and '%s'", want, got)
-		t.Fail()
+		assert.Equalf(t, want, got, "for Generate with %d seed to have same result", sourceSeed)
 	}
 }
