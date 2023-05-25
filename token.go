@@ -21,6 +21,9 @@ func GenerateWithIndices(indices []int) string {
 }
 
 func Generate(size int, r *rand.Rand) string {
+	if size <= 0 {
+		return ""
+	}
 	if r == nil {
 		r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	}
